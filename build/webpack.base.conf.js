@@ -21,23 +21,28 @@ const createLintingRule = () => ({
 
 module.exports = {
   context: path.resolve(__dirname, '../'),
+  //主入口文件entry
   entry: {
     app: './src/main.js'
   },
+  //输出文件output
   output: {
-    path: config.build.assetsRoot,
-    filename: '[name].js',
+    path: config.build.assetsRoot,//导出目录的绝对路径
+    filename: '[name].js',//导出文件的文件名
     publicPath: process.env.NODE_ENV === 'production'
       ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+      : config.dev.assetsPublicPath //生产模式或开发模式下的HTML/js等文件内部应用的公共路径
   },
+  //文件解析resolve
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
-    alias: {
+    extensions: ['.js', '.vue', '.json'],//自动解析确定的扩展名,使导入模块时不带扩展名
+    alias: {     //创建import 或 require 的别名
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
     }
   },
+  //模块解析module
+  //如何处理项目中不同类型的模块
   module: {
     rules: [
       ...(config.dev.useEslint ? [createLintingRule()] : []),
@@ -47,14 +52,14 @@ module.exports = {
         options: vueLoaderConfig
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
+        test: /\.js$/,             //js文件后缀
+        loader: 'babel-loader',    //使用Vue-loader进行处理
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
-      },
+      },//必须处理包含src.test的文件夹
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,    //图片后缀
+        loader: 'url-loader',                     //使用url-loader处理
+        options: {                                
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
